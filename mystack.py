@@ -5,10 +5,12 @@ import urllib2,urllib,requests
 import json
 import logging
 from logging.handlers import RotatingFileHandler
+import pytz
 from datetime import datetime
 from flaskext.mysql import MySQL
 from collections import OrderedDict
 
+mytz = pytz.timezone('America/Los_Angeles')
 port = int(os.getenv("PORT"))
 vcap = json.loads(os.environ['VCAP_SERVICES'])
 svc = vcap['cleardb'][0]['credentials']
@@ -332,7 +334,7 @@ def save_access_token(username,access_token):
 		con = mysql.connect()
 		cursor =  con.cursor()
 		query = 'replace into user_tokens set user= %s , access_token=%s , refreshedat = %s;'
-		cursor.execute(query,[username,access_token,datetime.now()])
+		cursor.execute(query,[username,access_token,datetime.now(mytz)])
 		con.commit()
 	finally:
 		cursor.close()
@@ -345,7 +347,7 @@ def create_new_usertask(username,task_id,task_name,status,position):
 		cursor =  con.cursor()
 		app.logger.info('Inserting taksk %s'%task_id)
 		status = 'started' if position == 0 and status == 'open' else status
-		started = datetime.now() if status == 'started' else None
+		started = datetime.now(mytz) if status == 'started' else None
 		app.logger.info('Status -->%s'%status)
 		query = 'insert into user_tasks (task_id,user,task_name,status,position,started) values(%s,%s,%s,%s,%s,%s)'
 		cursor.execute(query,[task_id,username,task_name,status,position,started])
@@ -367,7 +369,7 @@ def update_user_task(username,task_id,task_name,status,position,started_time=Non
 			started = started_time
 		else:
 			#print 'Starting now%s '%task_id
-			started = datetime.now() if status == 'started' else None
+			started = datetime.now(mytz) if status == 'started' else None
 		cursor.execute(query,[status,position,started,task_id])
 
 		con.commit()
@@ -444,7 +446,7 @@ def need_to_refresh():
 		cursor.execute(query,[session['token']])
 		data = {}
 		for refreshedat in cursor:
-			current_time = datetime.now()
+			current_time = datetime.now(mytz)
 			if refreshedat:
 				delta = current_time - refreshedat[0]
 				return delta.seconds >= 30*60
