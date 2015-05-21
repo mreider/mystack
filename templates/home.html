@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block top %}
+{{ super() }}
+    <script type="text/javascript">
+        $(document).ajaxStop($.unblockUI);
+        $(document).ready(function(){
+          setInterval(function() {
+            $('#refresh-form').submit();
+          }, 600000);
+          $('#refresh-form').submit(function(event){
+            event.preventDefault();
+            var forced = $('#forced').val();
+            var user = $('#username').val();
+              $.blockUI();
+              $.get( "/public",{'forced':forced,'user':user}).
+                  done(function( data ) {
+                    console.log(data);
+                      var parsed = $.parseJSON(data);
+                      $('#user-url').val("mystack.xyz/u/"+parsed.user);
+                      $('#result-area').empty();
+                      console.log(parsed.lists)
+                      $.each(parsed.lists,function(index,item){
+                          var content = '';
+                          if(item[4] == '0'){
+                            content = content + '<div class="wobble">'+item[1]+'<br>Promoted: '+ item[2] + '</div>';
+                          }else{
+                            content = content + '<div class="task">'+item[1]+'</div>';
+                          }
+                          $('#result-area').append(content);
+			                    $(".wobble").pulsate({color:"#3EB7DF",reach:10});
+                      });
+
+              });
+          });
+        });
+    </script>
+{% endblock %}
+{% block bodytop %}
+{{ super() }}
+{% if lists|length <= 0 %}
+	<h2>"My Stack" not found in your Wunderlist</h2>
+	<p>Open Wunderlist and create a list called "My Stack"</p>
+        <a href="/home?forced=true" class="button button-primary">I created it</a>
+{% else %}
+        <form action="/home" method="get" id="refresh-form">
+         <input type="hidden" name="forced" id="forced" value="true"/>
+         <input type="hidden" name="username" id="username" value="{{user}}"/>
+         <input type="submit" class="button-primary" value="Refresh "/>
+        </form>
+              {% if user is not none %}
+              <h2>{{user|replace("."," ")|title}}'s Stack</h2>
+	             <p>
+                 <input class="u-full-width" readonly="readonly" type="text" id="user-url" value="http://mystack.xyz/u/{{user}}" style="background-color:#e5e5e5">
+               </p>
+	            {%endif%}
+<div id="result-area">
+    {% for task in lists %}
+      {% if task[4] == 0 %}
+      <div class="wobble">{{task[1]}} <br>Promoted: {{task[2]}}</div>
+      {% else %}
+      <div class="task">{{task[1]}}</div>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+</div>
+{% endblock %}

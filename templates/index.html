@@ -1,0 +1,17 @@
+{% extends "base.html" %}    
+{% block bodytop %}
+{{ super() }}
+	<h2>Relieve the Pressure by Sharing your Stack</h2>
+	<p>
+	When Bob asks "Is the TPS report ready?" - show him where it fits in your stack of priorities.
+	</p>
+	<h3>How it works</h3>
+	<li>Create Wunderlist called "My Stack"</li>
+	<li>Add things in the order you'll do them</li>
+	<li>Share your stack with Bob</li>
+	<p>
+    	 <form method="get" action="login">
+  	     <button id="login-btn" type="submit" class="button-primary" style="">View My Stack</button>
+        </form>
+	</p>
+{% endblock %}

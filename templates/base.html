@@ -1,0 +1,38 @@
+{% block top %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Stack - Share Your List of Priorities</title>
+    <meta name="description" content="Publish your Wunderlist tasks in a published stack ranked list" />
+    <link href="{{ url_for('static', filename='css/skeleton.css') }}" media="all" rel="stylesheet"
+          type="text/css"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link href="{{ url_for('static', filename='css/normalize.css') }}" media="all" rel="stylesheet" type="text/css"/>
+    <script src="{{ url_for('static', filename='js/jquery-1.11.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.pulsate.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.blockUI.js') }}"></script>
+
+{% endblock %}
+{% block bodytop %}
+</head>
+  <body background="{{ url_for('static', filename='images/gray_watermark_mini_dots.png') }}">
+    <div class="container" >
+      <div class="row" style="margin-top:10%;">
+        <div class="12 columns">
+{% endblock %}
+{% block bodybottom %}
+	</div>
+      </div>
+    </div>
+  </body>
+  <script>
+  $("input[type='text']").on("click", function () {
+    $(this).select();
+  });
+  $(".wobble").pulsate({color:"#3EB7DF",reach:10})
+  </script>
+</html>
+{% endblock %}
