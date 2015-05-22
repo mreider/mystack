@@ -39,7 +39,7 @@
 {{ super() }}
 {% if lists|length <= 0 %}
 	<h2>"My Stack" not found in your Wunderlist</h2>
-	<p>Open Wunderlist and create a list called "My Stack"</p>
+	<p>Open Wunderlist and create a list called "My Stack" with at least one item in it.</p>
         <a href="/home?forced=true" class="button button-primary">I created it</a>
 {% else %}
         <form action="/home" method="get" id="refresh-form">
