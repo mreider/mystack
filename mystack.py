@@ -98,7 +98,13 @@ def home():
 		data = fetch_user(username,'open')
 		print data
 		for item in data :
-			date_str = item['started'].strftime("%B %d, %Y %I:%M %p") if item['started'] else ''
+			if item['started']:
+				local_date = item['started'].strptime(date_str, "%Y-%m-%d %H:%M:%S")
+				local_date.replace(tzinfo=timezone('America/Los_Angeles'))
+				date_str = local_date.strftime("%B %d, %Y %I:%M %p")
+			else:
+				date_str = ''
+
 			tasks.append((item['task_id'],item['task_name'],date_str,item['since'],item['position']))
 		return render_template('home.html',lists=tasks,operation='ongoing',user=username)
 
