@@ -13,7 +13,7 @@ oauth==1.0.1
 prettytable==0.7.2
 pyserial==2.6
 requests==2.2.1
-urllib3==1.7.1
+urllib3==1.24.2
 wheel==0.24.0
 wsgiref==0.1.2
 pytz==2013.7
